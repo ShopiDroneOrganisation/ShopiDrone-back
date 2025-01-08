@@ -32,14 +32,14 @@ Route.delete('/paniers/:id', 'PanierController.destroy')
 
 //Article routes
 
-Route.get('paniers', 'PanierController.index')
-Route.get('paniers/create', 'PanierController.create')
-Route.post('paniers', 'PanierController.store')
-Route.get('paniers/:id', 'PanierController.show')
-Route.get('paniers/:id/edit', 'PanierController.edit')
-Route.put('paniers/:id', 'PanierController.update')
-Route.patch('paniers/:id', 'PanierController.update')
-Route.delete('paniers/:id', 'PanierController.destroy')
+Route.get('articles', 'ArticleController.index')
+Route.get('articles/create', 'ArticleController.create')
+Route.post('articles', 'ArticleController.store')
+Route.get('articles/:id', 'ArticleController.show')
+Route.get('articles/:id/edit', 'ArticleController.edit')
+Route.put('articles/:id', 'ArticleController.update')
+Route.patch('articles/:id', 'ArticleController.update')
+Route.delete('articles/:id', 'ArticleController.destroy')
 
 
 //User routes
