@@ -1,8 +1,9 @@
-// config/supabase.js
+const { createClient } = require('@supabase/supabase-js')
 
+// Récupérer les variables d'environnement
 const { SUPABASE_URL, SUPABASE_KEY } = process.env
 
-module.exports = {
-  url: SUPABASE_URL,
-  key: SUPABASE_KEY,
-}
+// Créer et exporter le client Supabase
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+module.exports = supabase
