@@ -3,11 +3,6 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-
-/**
- * Resourceful controller for interacting with articles
- */
 
 const Article = use('App/Models/Article')
 
@@ -29,16 +24,8 @@ class ArticleController {
   }
 
   /**
-   * GET /articles/create
-   * (Facultatif) Formulaire de création si vous faites un rendu HTML.
-   */
-  async create ({ response }) {
-    return response.json({ message: 'Formulaire de création (optionnel).' })
-  }
-
-  /**
    * POST /articles
-   * Crée un nouvel article.
+   * Crée un nouvel article avec upload d'image.
    */
   async store ({ request, response }) {
     try {
@@ -50,10 +37,30 @@ class ArticleController {
         'description',
         'prix',
         'categorie',
-        'image',
         'compatibilite',
         'date_post',
       ])
+
+      // Gérer l'upload de l'image
+      const image = request.file('image', {
+        types: ['image'],
+        size: '2mb'
+      })
+
+      if (image) {
+        // Définir le chemin de stockage des images
+        await image.move('public/uploads', {
+          name: `${new Date().getTime()}.${image.subtype}`, // Nom unique
+          overwrite: true
+        })
+
+        if (!image.moved()) {
+          return image.error()
+        }
+
+        // Enregistrer le chemin de l'image dans les données
+        data.image = `/uploads/${image.fileName}`
+      }
 
       // Si pas de date_post fournie, on met la date du jour
       if (!data.date_post) {
@@ -91,14 +98,6 @@ class ArticleController {
   }
 
   /**
-   * GET /articles/:id/edit
-   * (Facultatif) Formulaire d’édition si vous faites un rendu HTML.
-   */
-  async edit ({ params, response }) {
-    return response.json({ message: `Formulaire d'édition (optionnel) pour l'article #${params.id}` })
-  }
-
-  /**
    * PUT ou PATCH /articles/:id
    * Met à jour un article existant.
    */
@@ -117,10 +116,28 @@ class ArticleController {
         'description',
         'prix',
         'categorie',
-        'image',
         'compatibilite',
         'date_post',
       ])
+
+      // Gérer l'upload de l'image si présente
+      const image = request.file('image', {
+        types: ['image'],
+        size: '2mb'
+      })
+
+      if (image) {
+        await image.move('public/uploads', {
+          name: `${new Date().getTime()}.${image.subtype}`,
+          overwrite: true
+        })
+
+        if (!image.moved()) {
+          return image.error()
+        }
+
+        data.image = `/uploads/${image.fileName}`
+      }
 
       // Merge les nouvelles données et sauvegarde
       article.merge(data)
@@ -147,7 +164,6 @@ class ArticleController {
       }
 
       await article.delete()
-      // 204 = No Content, typique pour un succès sans renvoyer de body
       return response.status(204).json()
     } catch (error) {
       return response.status(500).json({
