@@ -1,10 +1,25 @@
 #!/bin/bash
-echo "DB_CONNECTION=${DB_CONNECTION}" > .env
-echo "DB_HOST=${PG_HOST}" >> .env
-echo "DB_PORT=${PG_PORT}" >> .env
-echo "DB_USER=${PG_USER}" >> .env
-echo "DB_NAME=${PG_DB_NAME}" >> .env
-echo "DB_PASSWORD=${PG_PASSWORD}" >> .env
-echo "APP_KEY=${APP_KEY}" >> .env
-echo "NODE_ENV=${NODE_ENV}" >> .env
-# Ajoutez toutes les autres variables nécessaires
+
+cat <<EOF > .env
+HOST=${HOST}
+PORT=${PORT}
+NODE_ENV=${NODE_ENV}
+APP_URL=http://${HOST}:${PORT}
+
+CACHE_VIEWS=${CACHE_VIEWS}
+
+APP_KEY=${APP_KEY}
+
+SESSION_DRIVER=${SESSION_DRIVER}
+HASH_DRIVER=${HASH_DRIVER}
+
+SUPABASE_URL=postgresql://postgres:${SUPABASE_KEY}@db.bgmjwmfrwbwukpwyudvr.supabase.co:5432/postgres
+SUPABASE_KEY=${SUPABASE_KEY}
+
+DB_CONNECTION=${DB_CONNECTION}
+PG_HOST=${PG_HOST}
+PG_PORT=${PG_PORT}
+PG_USER=${PG_USER}
+PG_PASSWORD=${PG_PASSWORD}
+PG_DB_NAME=${PG_DB_NAME}
+EOF
