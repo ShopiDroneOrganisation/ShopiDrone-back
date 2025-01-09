@@ -1,7 +1,7 @@
 'use strict'
 
-const supabase = use('App/Config/supabase')
-
+// Ou en syntaxe "use" spécifique à Adonis :
+const supabase = use('App/Services/SupabaseClient')
 class UserController {
   /**
    * Inscription d'un utilisateur
